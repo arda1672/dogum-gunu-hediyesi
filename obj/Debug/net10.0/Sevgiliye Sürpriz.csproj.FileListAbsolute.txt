@@ -95,3 +95,4 @@ C:\Users\User\Desktop\Sevgiliye Sürpriz\obj\Debug\net10.0\refint\Sevgiliye Sür
 C:\Users\User\Desktop\Sevgiliye Sürpriz\obj\Debug\net10.0\Sevgiliye Sürpriz.pdb
 C:\Users\User\Desktop\Sevgiliye Sürpriz\obj\Debug\net10.0\Sevgiliye Sürpriz.genruntimeconfig.cache
 C:\Users\User\Desktop\Sevgiliye Sürpriz\obj\Debug\net10.0\ref\Sevgiliye Sürpriz.dll
+C:\Users\User\Desktop\Sevgiliye Sürpriz\obj\Debug\net10.0\Sevgiliye Sürpriz.sourcelink.json
