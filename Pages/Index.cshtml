@@ -351,78 +351,153 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Haritayı Oluştur
-        var map = L.map('loveMap').setView([40.1885, 29.0610], 10);
 
-        // OpenStreetMap Katmanı
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
 
-        // HARİTANIN YARIM GÖRÜNMESİNİ ENGELLEYEN KISIM (100ms sonra boyutları tekrar hesaplar)
-        setTimeout(function () {
-            map.invalidateSize();
-        }, 100);
 
-        // Özel Anlar Dizisi
-        var specialPlaces = [
-            {
-                name: "İlk Tanıştığımız Yer ❤️",
-                coords: [40.1885, 29.0610],
-                date: "15 Mayıs 2023",
-                description: "Gözlerinin gözlerime ilk değdiği o unutulmaz an...",
-                image: "/images/ilk-tanisma.jpg"
-            },
-            {
-                name: "İlk Randevu & Kahve ☕",
-                coords: [40.2100, 28.9800],
-                date: "20 Mayıs 2023",
-                description: "Heyecandan ellerimin titrediği ilk buluşmamız.",
-                image: "/images/ilk-randevu.jpg"
-            }
-        ];
 
-        // Pinleri ve Kalıcı İsim Etiketlerini Ekle
-        specialPlaces.forEach(function(place) {
-            var popupContent = `
-                <div class="custom-popup">
-                    <img src="${place.image}" class="popup-img" onerror="this.style.display='none'" />
-                    <h4 style="margin: 5px 0; color: #e63946;">${place.name}</h4>
-                    <small style="color: #666;">📅 ${place.date}</small>
-                    <p style="margin-top: 5px; font-size: 13px;">${place.description}</p>
-                </div>
-            `;
 
-            // Marker oluştur ve direkt üstünde yazması için bindTooltip ekle
-            var marker = L.marker(place.coords).addTo(map);
 
-            // Tıklamadan direkt üstünde görünen başlık etiketi
-            marker.bindTooltip(place.name, {
-                permanent: true,       // Etiket hep açık kalır
-                direction: 'top',      // Pinin üstünde görünür
-                className: 'map-label' // Şık görünüm için
-            });
 
-            // Tıklayınca detaylı kart açılır
-            marker.bindPopup(popupContent);
-        });
-    });
-</script>
+
+
+
+
+
+
+
+
 
 <style>
-    /* Pin üstündeki yazıların şık durması için CSS */
-    .map-label {
-        background-color: #ffffff;
-        border: 1px solid #e63946;
+    .love-map-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 25px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .love-map-title {
+        color: #e63946;
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .love-map-subtitle {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    .map-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        text-align: left;
+    }
+
+    @@media (max-width: 768px) {
+        .map-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .places-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .place-card {
+        padding: 15px;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .place-card:hover, .place-card.active {
+        border-color: #e63946;
+        background: #fff0f3;
+        transform: translateY(-2px);
+    }
+
+    .place-card h4 {
+        margin: 0 0 5px 0;
         color: #d62828;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 3px 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .place-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .map-iframe-container {
+        width: 100%;
+        height: 350px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .map-iframe-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
     }
 </style>
+
+<div class="love-map-wrapper">
+    <h2 class="love-map-title">🗺️ Aşk Haritamız</h2>
+    <p class="love-map-subtitle">Unutulmaz anlarımızın geçtiği özel noktalar...</p>
+
+    <div class="map-grid">
+        <!-- Sol Taraf: Konum Kartları -->
+        <div class="places-list">
+            <div class="place-card active" onclick="changeLocation('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12192.5!2d29.0610!3d40.1885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDExJzE4LjYiTiAyOcKwMDMnMzkuNiJF!5e0!3m2!1str!2str!4v1', this)">
+                <h4>📍 İlk Tanıştığımız Yer ❤️️</h4>
+                <p><b>Tarih:</b> 15 Mayıs 2023</p>
+                <p>Gözlerinin gözlerime ilk değdiği o unutulmaz an...</p>
+            </div>
+
+            <div class="place-card" onclick="changeLocation('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12192.5!2d28.9800!3d40.2100!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDEyJzM2LjAiTiAyOMKwNTgnNDggLjAiRQ!5e0!3m2!1str!2str!4v1', this)">
+                <h4>☕ İlk Randevu & Kahve</h4>
+                <p><b>Tarih:</b> 20 Mayıs 2023</p>
+                <p>Heyecandan ellerimin titrediği ilk buluşmamız.</p>
+            </div>
+        </div>
+
+        <!-- Sağ Taraf: Canlı Google Harita -->
+        <div class="map-iframe-container">
+            <iframe id="mainMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12192.5!2d29.0610!3d40.1885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDExJzE4LjYiTiAyOcKwMDMnMzkuNiJF!5e0!3m2!1str!2str!4v1" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeLocation(mapUrl, cardElement) {
+        // Haritayı değiştir
+        document.getElementById('mainMap').src = mapUrl;
+        
+        // Aktif kart stilini değiştir
+        let cards = document.querySelectorAll('.place-card');
+        cards.forEach(card => card.classList.remove('active'));
+        cardElement.classList.add('active');
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
 
 
 
