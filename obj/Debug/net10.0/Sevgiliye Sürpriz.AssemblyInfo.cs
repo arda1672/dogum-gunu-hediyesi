@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sevgiliye Sürpriz")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd934adbab0ca0dcbcad74c3f66b21b881d5078f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fb82fca17b00f55ccc4767d436ccc3c6e9c0d93")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sevgiliye Sürpriz")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sevgiliye Sürpriz")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
