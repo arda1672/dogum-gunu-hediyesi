@@ -17,114 +17,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
+    <!-- Leaflet CSS & JS (CDNs) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 
-
-
-
-<!-- PASTA BÖLÜMÜ HTML -->
-<div class="cake-section">
-    <h2>🎂 Bir Dilek Tut ve Mumu Üfle!</h2>
-    <div class="cake-container">
-        <span class="candle-flame" id="flame">🔥</span>
-        <span class="cake-emoji">🎂</span>
-    </div>
-    <br />
-    <button class="btn-blow" onclick="blowCandle()">💨 Mumu Üfle</button>
-    <div class="wish-message" id="wishMessage">
-        ✨ Dileğin kabul olsun sevgilim! İyi ki doğdun! ❤️🎉
-    </div>
-</div>
-
-<!-- PASTA CSS STİLLERİ -->
-<style>
-    .cake-section {
-        text-align: center;
-        margin: 30px auto;
-        padding: 25px;
-        background: #fff0f3;
-        border-radius: 20px;
-        max-width: 500px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    }
-
-    .cake-container {
-        position: relative;
-        display: inline-block;
-        margin: 15px 0;
-    }
-
-    .cake-emoji {
-        font-size: 80px;
-        display: block;
-    }
-
-    .candle-flame {
-        position: absolute;
-        top: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 30px;
-        transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .candle-flame.off {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
-    }
-
-    .btn-blow {
-        background-color: #e63946;
-        color: white;
-        border: none;
-        padding: 12px 28px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
-        box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
-    }
-
-    .btn-blow:hover {
-        background-color: #d62828;
-        transform: scale(1.05);
-    }
-
-    .wish-message {
-        display: none;
-        margin-top: 15px;
-        color: #d62828;
-        font-weight: bold;
-        font-size: 18px;
-    }
-</style>
-
-<!-- PASTA JAVASCRIPT FONKSİYONU -->
-<script>
-    function blowCandle() {
-        var flame = document.getElementById("flame");
-        var wishMessage = document.getElementById("wishMessage");
-        
-        if (flame) {
-            flame.classList.add("off");
-        }
-        if (wishMessage) {
-            wishMessage.style.display = "block";
-        }
-    }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-    
     <style>
         :root {
             --primary: #ff4d6d;
@@ -319,6 +215,8 @@
             color: #333;
             font-size: 1.6rem;
             margin-top: 12px;
+        }
+
         /* ==========================================
            PASTA & DİLEK BÖLÜMÜ STİLLERİ
            ========================================== */
@@ -358,7 +256,6 @@
             box-shadow: inset 0 -8px 0 rgba(0,0,0,0.2);
         }
 
-        /* Katlar üzerindeki krema dalgası */
         .layer::before {
             content: '';
             position: absolute;
@@ -448,6 +345,11 @@
             animation: flicker 0.2s infinite alternate ease-in-out;
             transform-origin: center bottom;
             transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        @@keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); }
+            100% { transform: scale(1.08) rotate(2deg); }
         }
 
         .flame-glow.off {
@@ -542,6 +444,191 @@
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
         }
+
+        /* ==========================================
+           HARİTA BÖLÜMÜ STİLLERİ
+           ========================================== */
+        .love-map-wrapper {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .love-map-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .love-map-header h2 {
+            color: #e63946;
+            margin-bottom: 5px;
+        }
+
+        .love-map-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .map-grid-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        @@media (max-width: 768px) {
+            .map-grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .shortcut-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .shortcut-card {
+            padding: 14px 16px;
+            background: #fdfbfb;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+        }
+
+        .shortcut-card:hover, .shortcut-card.active {
+            border-color: #e63946;
+            background: #fff0f3;
+            transform: translateY(-2px);
+        }
+
+        .shortcut-card h4 {
+            margin: 0 0 4px 0;
+            color: #d62828;
+            font-size: 15px;
+        }
+
+        .shortcut-card p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .map-box-container {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            min-height: 420px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f8f9fa;
+        }
+
+        #coordMap {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .map-tooltip {
+            background: #ffffff;
+            border: 2px solid #e63946;
+            color: #d62828;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 4px 8px;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 5px;
+        }
+
+        .popup-box {
+            text-align: center;
+            max-width: 210px;
+            padding: 4px;
+        }
+
+        .popup-box h4 {
+            margin: 4px 0;
+            color: #e63946;
+            font-size: 14px;
+        }
+
+        .popup-box p {
+            margin: 3px 0;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .popup-img-container {
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .popup-img-container img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .btn-view-pic {
+            display: block;
+            margin-top: 6px;
+            padding: 5px;
+            background: #e63946;
+            color: white !important;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -567,6 +654,7 @@
         </button>
     </nav>
 
+    <!-- MEKTUP SEKMESİ -->
     <div id="home" class="tab-content active">
         <div class="date-badge">✨ 6 Ekim Özel Gün ✨</div>
         <h1>İyi Ki Doğdun Bitanemm! ❤️</h1>
@@ -582,6 +670,7 @@
         </div>
     </div>
 
+    <!-- GÜZEL ANILAR VE HARİTA SEKMESİ -->
     <div id="gallery" class="tab-content">
         <h1>Unutulmaz Anlar 📸</h1>
         <p class="subtitle">Kalbimde yer eden en özel kareler...</p>
@@ -596,395 +685,209 @@
                 <div class="caption">Her Şeyi Güzelleştiren Duruşun 🌿</div>
             </div>
             <div class="polaroid">
-               <img src="/resimler/foto3.jpeg" alt="Anı 3">
+                <img src="/resimler/foto3.jpeg" alt="Anı 3">
                 <div class="caption">Bütün Mevsimleri Bahar Yapan Gülüş 🌼</div>
             </div>
-            
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Leaflet CSS & JS (CDNs) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-
-<style>
-    .love-map-wrapper {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 25px;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-
-
-
-
-
-    .love-map-header {
-        text-align: center;
-        margin-bottom: 25px;
-    }
-
-    .love-map-header h2 {
-        color: #e63946;
-        margin-bottom: 5px;
-    }
-
-    .love-map-header p {
-        color: #666;
-        margin: 0;
-    }
-
-    .map-grid-layout {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 20px;
-        align-items: stretch;
-    }
-
-    @@media (max-width: 768px) {
-        .map-grid-layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .shortcut-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        max-height: 420px;
-        overflow-y: auto;
-        padding-right: 5px;
-    }
-
-    .shortcut-card {
-        padding: 14px 16px;
-        background: #fdfbfb;
-        border: 2px solid #f0f0f0;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        text-align: left;
-    }
-
-    .shortcut-card:hover, .shortcut-card.active {
-        border-color: #e63946;
-        background: #fff0f3;
-        transform: translateY(-2px);
-    }
-
-    .shortcut-card h4 {
-        margin: 0 0 4px 0;
-        color: #d62828;
-        font-size: 15px;
-    }
-
-    .shortcut-card p {
-        margin: 0;
-        font-size: 12px;
-        color: #666;
-    }
-
-    /* HARİTANIN BEYAZ KALMASINI ENGELLEYEN SABİT YÜKSEKLİK TANIMI */
-    .map-box-container {
-        position: relative;
-        width: 100%;
-        height: 420px; /* Yükseklik kesin olarak belirlendi */
-        min-height: 420px;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background: #f8f9fa;
-    }
-
-    #coordMap {
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
-
-    .map-tooltip {
-        background: #ffffff;
-        border: 2px solid #e63946;
-        color: #d62828;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 4px 8px;
-        font-size: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    .leaflet-popup-content-wrapper {
-        border-radius: 12px;
-        padding: 5px;
-    }
-
-    .popup-box {
-        text-align: center;
-        max-width: 210px;
-        padding: 4px;
-    }
-
-    .popup-box h4 {
-        margin: 4px 0;
-        color: #e63946;
-        font-size: 14px;
-    }
-
-    .popup-box p {
-        margin: 3px 0;
-        font-size: 11px;
-        color: #555;
-    }
-
-    .popup-img-container {
-        margin-top: 8px;
-        position: relative;
-        overflow: hidden;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        cursor: pointer;
-    }
-
-    .popup-img-container img {
-        width: 100%;
-        height: 110px;
-        object-fit: cover;
-        display: block;
-    }
-
-    .btn-view-pic {
-        display: block;
-        margin-top: 6px;
-        padding: 5px;
-        background: #e63946;
-        color: white !important;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 11px;
-        font-weight: bold;
-    }
-
-    .image-modal {
-        display: none;
-        position: fixed;
-        z-index: 99999;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.85);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .image-modal img {
-        max-width: 90%;
-        max-height: 85%;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .image-modal-close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        color: white;
-        font-size: 35px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-</style>
-
-
-
-<div class="love-map-wrapper">
-    <div class="love-map-header">
-        <h2>🗺️ Aşk Haritamız</h2>
-        <p>Sol taraftaki konumlara tıklayarak anılarımıza yolculuk yapabilirsiniz...</p>
-    </div>
-
-    <div class="map-grid-layout">
-        <div class="shortcut-list" id="shortcutContainer"></div>
-        <div class="map-box-container">
-            <div id="coordMap"></div>
-        </div>
-    </div>
-</div>
-
-<div id="imgModal" class="image-modal" onclick="closeImageModal()">
-    <span class="image-modal-close">&times;</span>
-    <img id="modalImg" src="" />
-</div>
-
-<script>
-    function openImageModal(imgSrc) {
-        var modal = document.getElementById("imgModal");
-        var modalImg = document.getElementById("modalImg");
-        if (modal && modalImg) {
-            modalImg.src = imgSrc;
-            modal.style.display = "flex";
-        }
-    }
-
-    function closeImageModal() {
-        var modal = document.getElementById("imgModal");
-        if (modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Haritayı yükleme fonksiyonu
-    function initLoveMap() {
-        var mapElement = document.getElementById('coordMap');
-        if (!mapElement) return;
-
-        var mekanlar = [
-            {
-                
-                baslik: "İlk Resim Çekindiğimiz Yer 📸❤️",
-                enlem: 40.196127,
-                boylam: 29.054985,
-                tarih: "18 Aralık 2025",
-                not: "Birlikte ilk karemiz, unutulmaz anımız...",
-                resim: "/Resimler/ilk-resim.jpeg" // Dosya uzantın neyse orayı yaz (.jpg, .jpeg, .png)
-            },
-            {
-                
-                baslik: "İlk Tanıştığımız Yer ❤️",
-                enlem: 40.209568,
-                boylam: 29.018571,
-                tarih: "20 Kasım 2025",
-                not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
-                resim: ""
-            },
-            {
-                
-                baslik: "Mutlu Geçen Bir Gün 🌸",
-                enlem: 40.427481,
-                boylam: 29.711729,
-                tarih: "29 Mayıs 2026",
-                not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
-                resim: "/Resimler/iki-resim.jpeg"
-            }
-            
-        ];
-
-        var map = L.map('coordMap', {
-            zoomControl: true,
-            scrollWheelZoom: true
-        }).setView([mekanlar[0].enlem, mekanlar[0].boylam], 13);
-        window.loveMap = map;
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        // Harita karelerinin yüklenmesi için invalidateSize çağrıları
-        setTimeout(function () {
-            map.invalidateSize();
-        }, 100);
-
-        setTimeout(function () {
-            map.invalidateSize();
-        }, 500);
-
-        var shortcutContainer = document.getElementById("shortcutContainer");
-        if (shortcutContainer) {
-            shortcutContainer.innerHTML = "";
-        }
-
-        mekanlar.forEach(function (place, index) {
-            var marker = L.marker([place.enlem, place.boylam]).addTo(map);
-
-            marker.bindTooltip(place.baslik, {
-                permanent: true,
-                direction: 'top',
-                className: 'map-tooltip'
-            });
-
-            var resimHtml = place.resim ? `
-                <div class="popup-img-container" onclick="openImageModal('${place.resim}')">
-                    <img src="${place.resim}" alt="${place.baslik}" onerror="this.parentElement.style.display='none'" />
+        <div class="love-map-wrapper">
+            <div class="love-map-header">
+                <h2>🗺️ Aşk Haritamız</h2>
+                <p>Sol taraftaki konumlara tıklayarak anılarımıza yolculuk yapabilirsiniz...</p>
+            </div>
+
+            <div class="map-grid-layout">
+                <div class="shortcut-list" id="shortcutContainer"></div>
+                <div class="map-box-container">
+                    <div id="coordMap"></div>
                 </div>
-                <a href="javascript:void(0)" class="btn-view-pic" onclick="openImageModal('${place.resim}')">🔍 Resmi Gör / Büyüt</a>
-            ` : '';
+            </div>
+        </div>
+    </div>
 
-            var popupContent = `
-                <div class="popup-box">
+    <!-- PASTA & DİLEK SEKMESİ -->
+    <div id="cake" class="tab-content">
+        <h1>Birlikte Bir Yaş Daha! 🎂</h1>
+        <p class="subtitle">Önce içinden güzel bir dilek tut, sonra muma tıkla veya butona bas!</p>
+
+        <div class="cake-container-box">
+            <div class="cake-stage">
+                <div class="cake-body">
+                    <!-- Mum Yapısı -->
+                    <div class="candle-wrapper" onclick="blowCandle()">
+                        <div class="flame-glow" id="flame"></div>
+                        <div class="smoke-puff" id="smoke">💨</div>
+                        <div class="candle-stick"></div>
+                    </div>
+
+                    <!-- 3 Katlı Pasta Yapısı -->
+                    <div class="strawberries">🍓🍓🍓</div>
+                    <div class="layer layer-top"></div>
+                    <div class="layer layer-middle"></div>
+                    <div class="layer layer-bottom"></div>
+                    <div class="cake-plate"></div>
+                </div>
+            </div>
+
+            <div class="btn-controls">
+                <button class="action-btn" id="btnBlow" onclick="blowCandle()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mumu Üfle & Dilek Tut!
+                </button>
+                <button class="action-btn secondary" id="btnRelight" onclick="relightCandle()" style="display: none;">
+                    <i class="fa-solid fa-fire-flame-curved"></i> Mumu Tekrar Yak 🕯️
+                </button>
+            </div>
+
+            <!-- Dilek Mesajı Box -->
+            <div class="wish-message" id="wishMessage">
+                <h3>🎉 Dileğin Gökyüzüne Ulaştı! 💕</h3>
+                <p>Yeni yaşında sağlık, mutluluk ve hep yan yana olacağımız nice güzel anlar seninle olsun sevgilim!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESİM BÜYÜTME MODAL -->
+    <div id="imgModal" class="image-modal" onclick="closeImageModal()">
+        <span class="image-modal-close">&times;</span>
+        <img id="modalImg" src="" />
+    </div>
+
+    <!-- JAVASCRIPT KODLARI -->
+    <script>
+        // Modal Görsel Açma/Kapatma
+        function openImageModal(imgSrc) {
+            var modal = document.getElementById("imgModal");
+            var modalImg = document.getElementById("modalImg");
+            if (modal && modalImg) {
+                modalImg.src = imgSrc;
+                modal.style.display = "flex";
+            }
+        }
+
+        function closeImageModal() {
+            var modal = document.getElementById("imgModal");
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Haritayı yükleme fonksiyonu
+        function initLoveMap() {
+            var mapElement = document.getElementById('coordMap');
+            if (!mapElement) return;
+
+            var mekanlar = [
+                {
+                    baslik: "İlk Resim Çekindiğimiz Yer 📸❤️",
+                    enlem: 40.196127,
+                    boylam: 29.054985,
+                    tarih: "18 Aralık 2025",
+                    not: "Birlikte ilk karemiz, unutulmaz anımız...",
+                    resim: "/Resimler/ilk-resim.jpeg"
+                },
+                {
+                    baslik: "İlk Tanıştığımız Yer ❤️",
+                    enlem: 40.209568,
+                    boylam: 29.018571,
+                    tarih: "20 Kasım 2025",
+                    not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
+                    resim: ""
+                },
+                {
+                    baslik: "Mutlu Geçen Bir Gün 🌸",
+                    enlem: 40.427481,
+                    boylam: 29.711729,
+                    tarih: "29 Mayıs 2026",
+                    not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
+                    resim: "/Resimler/iki-resim.jpeg"
+                }
+            ];
+
+            var map = L.map('coordMap', {
+                zoomControl: true,
+                scrollWheelZoom: true
+            }).setView([mekanlar[0].enlem, mekanlar[0].boylam], 13);
+            window.loveMap = map;
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            setTimeout(function () { map.invalidateSize(); }, 100);
+            setTimeout(function () { map.invalidateSize(); }, 500);
+
+            var shortcutContainer = document.getElementById("shortcutContainer");
+            if (shortcutContainer) {
+                shortcutContainer.innerHTML = "";
+            }
+
+            mekanlar.forEach(function (place, index) {
+                var marker = L.marker([place.enlem, place.boylam]).addTo(map);
+
+                marker.bindTooltip(place.baslik, {
+                    permanent: true,
+                    direction: 'top',
+                    className: 'map-tooltip'
+                });
+
+                var resimHtml = place.resim ? `
+                    <div class="popup-img-container" onclick="openImageModal('${place.resim}')">
+                        <img src="${place.resim}" alt="${place.baslik}" onerror="this.parentElement.style.display='none'" />
+                    </div>
+                    <a href="javascript:void(0)" class="btn-view-pic" onclick="openImageModal('${place.resim}')">🔍 Resmi Gör / Büyüt</a>
+                ` : '';
+
+                var popupContent = `
+                    <div class="popup-box">
+                        <h4>${place.baslik}</h4>
+                        <p><b>📅 ${place.tarih}</b></p>
+                        <p>${place.not}</p>
+                        ${resimHtml}
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+
+                var card = document.createElement("div");
+                card.className = "shortcut-card" + (index === 0 ? " active" : "");
+                card.innerHTML = `
                     <h4>${place.baslik}</h4>
                     <p><b>📅 ${place.tarih}</b></p>
-                    <p>${place.not}</p>
-                    ${resimHtml}
-                </div>
-            `;
-            
-            marker.bindPopup(popupContent);
+                `;
 
-            var card = document.createElement("div");
-            card.className = "shortcut-card" + (index === 0 ? " active" : "");
-            card.innerHTML = `
-                <h4>${place.baslik}</h4>
-                <p><b>📅 ${place.tarih}</b></p>
-            `;
+                card.addEventListener("click", function () {
+                    document.querySelectorAll('.shortcut-card').forEach(function(c) {
+                        c.classList.remove('active');
+                    });
+                    card.classList.add('active');
 
-            card.addEventListener("click", function () {
-                document.querySelectorAll('.shortcut-card').forEach(function(c) {
-                    c.classList.remove('active');
-                });
-                card.classList.add('active');
+                    map.invalidateSize();
+                    map.setView([place.enlem, place.boylam], 14, {
+                        animate: true,
+                        pan: { duration: 1 }
+                    });
 
-                map.invalidateSize();
-                map.setView([place.enlem, place.boylam], 14, {
-                    animate: true,
-                    pan: { duration: 1 }
+                    setTimeout(function() {
+                        marker.openPopup();
+                    }, 300);
                 });
 
-                setTimeout(function() {
-                    marker.openPopup();
-                }, 300);
+                if (shortcutContainer) {
+                    shortcutContainer.appendChild(card);
+                }
             });
+        }
 
-            if (shortcutContainer) {
-                shortcutContainer.appendChild(card);
-            }
-        });
-    }
+        // Sayfa yüklendiğinde haritayı başlat
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            setTimeout(initLoveMap, 100);
+        } else {
+            window.addEventListener("DOMContentLoaded", initLoveMap);
+            window.addEventListener("load", initLoveMap);
+        }
 
-    // Sayfa tamamen yüklendiğinde haritayı başlat
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-        setTimeout(initLoveMap, 100);
-    } else {
-        window.addEventListener("DOMContentLoaded", initLoveMap);
-        window.addEventListener("load", initLoveMap);
-    }
-</script>
-    </div> <!-- Güzel Anılar (#gallery) sekmesinin kapanışı -->
->
-
-    <script>
+        // Sekmeler Arası Geçiş
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -1004,6 +907,7 @@
             }
         }
 
+        // Mum Üfleme Fonksiyonları
         let isBlown = false;
         function blowCandle() {
             if (isBlown) return;
@@ -1041,9 +945,9 @@
             if (btnRelight) btnRelight.style.display = 'none';
         }
 
+        // Konfeti Efekti
         function triggerConfetti() {
             if (typeof confetti === 'function') {
-                // Merkezden büyük patlama
                 confetti({
                     particleCount: 160,
                     spread: 120,
@@ -1051,7 +955,6 @@
                     colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd166', '#06d6a0', '#118ab2', '#ffffff']
                 });
 
-                // 3 saniye boyunca iki kenardan devam eden kutlama fışkırması
                 const duration = 3000;
                 const animationEnd = Date.now() + duration;
 
@@ -1079,6 +982,7 @@
             }
         }
 
+        // Arka Plan Müziği
         const audio = document.getElementById('bgMusic');
         function toggleMusic() {
             const icon = document.getElementById('musicIcon');
@@ -1098,6 +1002,7 @@
             }
         }
 
+        // Arka Plan Kalp Animasyonu
         function createHearts() {
             for(let i=0; i<15; i++) {
                 let heart = document.createElement('div');
