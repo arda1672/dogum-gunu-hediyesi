@@ -185,36 +185,107 @@
             border-left: 5px solid var(--primary);
         }
 
+        /* ==========================================
+           3D DÖNEN POLAROID KART STİLLERİ
+           ========================================== */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 25px;
             padding: 10px;
         }
 
-        .polaroid {
-            background: #fff;
-            padding: 15px 15px 25px 15px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+        .flip-card {
+            background-color: transparent;
+            height: 330px;
+            perspective: 1000px; /* 3D derinlik algısı */
             cursor: pointer;
         }
 
-        .polaroid:hover { transform: scale(1.05) rotate(1deg); }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
 
-        .polaroid img {
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* Ön Yüz */
+        .flip-card-front {
+            background: #fff;
+            padding: 15px 15px 20px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .flip-card-front img {
             width: 100%;
             height: 220px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
-        .polaroid .caption {
+        .flip-card-front .caption {
             font-family: 'Caveat', cursive;
             color: #333;
+            font-size: 1.5rem;
+            margin-top: 8px;
+        }
+
+        .flip-hint {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Arka Yüz */
+        .flip-card-back {
+            background: linear-gradient(135deg, #ff4d6d 0%, #ff758f 100%);
+            color: white;
+            transform: rotateY(180deg);
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--primary-soft);
+        }
+
+        .flip-card-back .heart-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: #fff;
+            animation: pulse 1.5s infinite;
+        }
+
+        @@keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .flip-card-back p {
+            font-family: 'Caveat', cursive;
             font-size: 1.6rem;
-            margin-top: 12px;
+            line-height: 1.4;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         /* ==========================================
@@ -673,23 +744,65 @@
     <!-- GÜZEL ANILAR VE HARİTA SEKMESİ -->
     <div id="gallery" class="tab-content">
         <h1>Unutulmaz Anlar 📸</h1>
-        <p class="subtitle">Kalbimde yer eden en özel kareler...</p>
+        <p class="subtitle">Fotoğraflara tıklayarak arkasındaki gizli notları oku... 🔄</p>
 
+        <!-- 3D Dönen Fotoğraf Kartları -->
         <div class="gallery-grid">
-            <div class="polaroid">
-                <img src="/resimler/foto1.jpeg" alt="Anı 1">
-                <div class="caption">Bakmaya Doyamadığım Gözlerin 🌸</div>
+            
+            <!-- Resim 1 -->
+            <div class="flip-card" onclick="flipCard(this)">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/resimler/foto1.jpeg" alt="Anı 1">
+                        <div>
+                            <div class="caption">Bakmaya Doyamadığım Gözlerin 🌸</div>
+                            <div class="flip-hint">✨ Çevirmek için tıkla</div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <i class="fa-solid fa-heart heart-icon"></i>
+                        <p>"Gözlerine her baktığımda, kaybolmak istediğim tek yeri yeniden buluyorum..." 💕</p>
+                    </div>
+                </div>
             </div>
-            <div class="polaroid">
-                <img src="/resimler/foto2.jpeg" alt="Anı 2">
-                <div class="caption">Her Şeyi Güzelleştiren Duruşun 🌿</div>
+
+            <!-- Resim 2 -->
+            <div class="flip-card" onclick="flipCard(this)">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/resimler/foto2.jpeg" alt="Anı 2">
+                        <div>
+                            <div class="caption">Her Şeyi Güzelleştiren Duruşun 🌿</div>
+                            <div class="flip-hint">✨ Çevirmek için tıkla</div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <i class="fa-solid fa-sparkles heart-icon"></i>
+                        <p>"Sen nereye gidersen git, orayı dünyanın en huzurlu köşesine dönüştürüyorsun sevgilim..." ✨</p>
+                    </div>
+                </div>
             </div>
-            <div class="polaroid">
-                <img src="/resimler/foto3.jpeg" alt="Anı 3">
-                <div class="caption">Bütün Mevsimleri Bahar Yapan Gülüş 🌼</div>
+
+            <!-- Resim 3 -->
+            <div class="flip-card" onclick="flipCard(this)">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="/resimler/foto3.jpeg" alt="Anı 3">
+                        <div>
+                            <div class="caption">Mevsimleri Bahar Yapan Gülüş 🌼</div>
+                            <div class="flip-hint">✨ Çevirmek için tıkla</div>
+                        </div>
+                    </div>
+                    <div class="flip-card-back">
+                        <i class="fa-solid fa-sun heart-icon"></i>
+                        <p>"Gülüşün öyle güzel ki, en karanlık günümde bile içimi ısıtan tek güneş oluyor..." ☀️❤️</p>
+                    </div>
+                </div>
             </div>
+
         </div>
 
+        <!-- Aşk Haritası -->
         <div class="love-map-wrapper">
             <div class="love-map-header">
                 <h2>🗺️ Aşk Haritamız</h2>
@@ -754,6 +867,11 @@
 
     <!-- JAVASCRIPT KODLARI -->
     <script>
+        // Kartı Ters Döndürme Fonksiyonu
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+
         // Modal Görsel Açma/Kapatma
         function openImageModal(imgSrc) {
             var modal = document.getElementById("imgModal");
@@ -786,7 +904,7 @@
                     resim: "/Resimler/ilk-resim.jpeg"
                 },
                 {
-                    baslik: "İlk Tanıştığımız Yer ❤️",
+                    baslik: "İlk Tanıştığımız Yer ❤️️",
                     enlem: 40.209568,
                     boylam: 29.018571,
                     tarih: "20 Kasım 2025",
