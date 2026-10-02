@@ -360,47 +360,140 @@
 
 
 
+
+
+
+
 <!-- Leaflet CSS & JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
-    /* Popup Kutusunun Taşmasını Engelleyen CSS */
+    .love-map-wrapper {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 25px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .love-map-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .love-map-header h2 {
+        color: #e63946;
+        margin-bottom: 5px;
+    }
+
+    .love-map-header p {
+        color: #666;
+        margin: 0;
+    }
+
+    .map-grid-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    @@media (max-width: 768px) {
+        .map-grid-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .shortcut-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .shortcut-card {
+        padding: 14px 16px;
+        background: #fdfbfb;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        text-align: left;
+    }
+
+    .shortcut-card:hover, .shortcut-card.active {
+        border-color: #e63946;
+        background: #fff0f3;
+        transform: translateY(-2px);
+    }
+
+    .shortcut-card h4 {
+        margin: 0 0 4px 0;
+        color: #d62828;
+        font-size: 15px;
+    }
+
+    .shortcut-card p {
+        margin: 0;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .map-box-container {
+        position: relative;
+        width: 100%;
+        min-height: 420px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #coordMap {
+        position: absolute;
+        top: 0; bottom: 0; left: 0; right: 0;
+        width: 100%; height: 100%;
+        z-index: 1;
+    }
+
+    .map-tooltip {
+        background: #ffffff;
+        border: 2px solid #e63946;
+        color: #d62828;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
     .leaflet-popup-content-wrapper {
         border-radius: 12px;
         padding: 5px;
     }
+
     .popup-box {
         text-align: center;
-        max-width: 210px; /* Sabit Genişlik */
+        max-width: 210px;
         padding: 4px;
     }
+
     .popup-box h4 {
         margin: 4px 0;
         color: #e63946;
         font-size: 14px;
     }
+
     .popup-box p {
         margin: 3px 0;
         font-size: 11px;
         color: #555;
     }
 
-    /* Beyaz Kutu İçindeki Küçük Resim Tasarımı */
     .popup-img-container {
         margin-top: 8px;
         position: relative;
@@ -409,15 +502,12 @@
         border: 1px solid #eee;
         cursor: pointer;
     }
+
     .popup-img-container img {
         width: 100%;
-        height: 110px; /* Kutu içi sabit yükseklik */
-        object-fit: cover; /* Resmi ezmeden kutuya tam oturtur */
+        height: 110px;
+        object-fit: cover;
         display: block;
-        transition: transform 0.3s ease;
-    }
-    .popup-img-container:hover img {
-        transform: scale(1.05); /* Üzerine gelince tatlı bir yaklaşma efekti */
     }
 
     .btn-view-pic {
@@ -430,13 +520,9 @@
         text-decoration: none;
         font-size: 11px;
         font-weight: bold;
-        transition: background 0.2s;
-    }
-    .btn-view-pic:hover {
-        background: #d62828;
     }
 
-    /* Tıklayınca Resmi Ekranın Ortasında Büyüten Modal (Lightbox) */
+    /* Modal Büyütme Penceresi */
     .image-modal {
         display: none;
         position: fixed;
@@ -447,12 +533,14 @@
         justify-content: center;
         align-items: center;
     }
+
     .image-modal img {
         max-width: 90%;
         max-height: 85%;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
+
     .image-modal-close {
         position: absolute;
         top: 20px;
@@ -464,34 +552,52 @@
     }
 </style>
 
-<!-- Resim Büyütme Modal Penceresi -->
+<div class="love-map-wrapper">
+    <div class="love-map-header">
+        <h2>🗺️ Aşk Haritamız</h2>
+        <p>Sol taraftaki konumlara tıklayarak anılarımıza yolculuk yapabilirsiniz...</p>
+    </div>
+
+    <div class="map-grid-layout">
+        <div class="shortcut-list" id="shortcutContainer"></div>
+        <div class="map-box-container">
+            <div id="coordMap"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Resim Büyütme Modal -->
 <div id="imgModal" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <img id="modalImg" src="" />
 </div>
 
 <script>
-    // Resmi ekranın ortasında tam boy büyüten fonksiyon
     function openImageModal(imgSrc) {
         var modal = document.getElementById("imgModal");
         var modalImg = document.getElementById("modalImg");
-        modalImg.src = imgSrc;
-        modal.style.display = "flex";
+        if (modal && modalImg) {
+            modalImg.src = imgSrc;
+            modal.style.display = "flex";
+        }
     }
 
     function closeImageModal() {
-        document.getElementById("imgModal").style.display = "none";
+        var modal = document.getElementById("imgModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
     }
 
     window.addEventListener("load", function () {
         var mekanlar = [
             {
                 baslik: "İlk Resim Çekindiğimiz Yer 📸❤️",
-                enlem: 40.1885,   // Kendi koordinatlarınız
-                boylam: 29.0610,  // Kendi koordinatlarınız
+                enlem: 40.1885,
+                boylam: 29.0610,
                 tarih: "15 Mayıs 2023",
                 not: "Birlikte ilk karemiz, unutulmaz anımız...",
-                resim: "/Resimler/ilk-resim.jpeg"
+                resim: "/images/ilk-resim.jpeg" // Dosya uzantın neyse orayı yaz (.jpg, .jpeg, .png)
             },
             {
                 baslik: "İlk Randevu & Kahve ☕",
@@ -499,9 +605,12 @@
                 boylam: 28.9800,
                 tarih: "20 Mayıs 2023",
                 not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
-                resim: "/Resimler/ilk-randevu.jpg"
+                resim: ""
             }
         ];
+
+        var mapElement = document.getElementById('coordMap');
+        if (!mapElement) return;
 
         var map = L.map('coordMap', {
             zoomControl: true,
@@ -515,9 +624,8 @@
 
         setTimeout(function () {
             map.invalidateSize();
-        }, 200);
+        }, 300);
 
-        var markers = [];
         var shortcutContainer = document.getElementById("shortcutContainer");
 
         mekanlar.forEach(function (place, index) {
@@ -529,7 +637,6 @@
                 className: 'map-tooltip'
             });
 
-            // Beyaz Kutunun İçine Düzgün Sığan Resim İçeriği
             var resimHtml = place.resim ? `
                 <div class="popup-img-container" onclick="openImageModal('${place.resim}')">
                     <img src="${place.resim}" alt="${place.baslik}" onerror="this.parentElement.style.display='none'" />
@@ -547,7 +654,6 @@
             `;
             
             marker.bindPopup(popupContent);
-            markers.push(marker);
 
             var card = document.createElement("div");
             card.className = "shortcut-card" + (index === 0 ? " active" : "");
@@ -573,7 +679,9 @@
                 }, 300);
             });
 
-            shortcutContainer.appendChild(card);
+            if (shortcutContainer) {
+                shortcutContainer.appendChild(card);
+            }
         });
     });
 </script>
@@ -592,7 +700,12 @@
 
 
 
-    </div>
+
+
+
+
+
+
 
     <div id="cake" class="tab-content">
         <h1>Bir Dilek Tut ve Mumu Üfle! 🕯️</h1>
