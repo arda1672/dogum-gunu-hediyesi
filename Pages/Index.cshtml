@@ -343,7 +343,106 @@
                <img src="/resimler/foto3.jpeg" alt="Anı 3">
                 <div class="caption">Bütün Mevsimleri Bahar Yapan Gülüş 🌼</div>
             </div>
+            
         </div>
+
+
+<!-- Harita İçin CSS ve JS Kütüphanesi -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    .map-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    #loveMap {
+        height: 450px;
+        width: 100%;
+        border-radius: 15px;
+        margin-top: 15px;
+    }
+    .custom-popup .leaflet-popup-content-wrapper {
+        border-radius: 12px;
+        padding: 5px;
+        text-align: center;
+    }
+    .popup-img {
+        width: 100%;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+</style>
+
+<div class="map-container">
+    <h2>🗺️ Aşk Haritamız</h2>
+    <p>Unutulmaz anlarımızın geçtiği özel noktalar...</p>
+    <div id="loveMap"></div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Haritayı Başlat (İlk merkeze alınacak enlem, boylam ve zoom seviyesi)
+        var map = L.map('loveMap').setView([40.209583, 29.018574], 10); // Örn: Bursa civarı
+
+        // OpenStreetMap Katmanı
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Özel Anlar / Konumlar Dizisi (Burayı kendi konumlarınla güncelle!)
+        var specialPlaces = [
+            {
+                name: "İlk Tanıştığımız Yer ❤️",
+                coords: [40.209583, 29.018574], // Enlem, Boylam
+                date: "15 Mayıs 2023",
+                description: "Gözlerinin gözlerime ilk değdiği o unutulmaz an...",
+                image: "/images/ilk-tanisma.jpg" // wwwroot/images içindeki resim
+            },
+            {
+                name: "İlk Randevu & Kahve ☕",
+                coords: [40.2100, 28.9800],
+                date: "20 Mayıs 2023",
+                description: "Heyecandan ellerimin titrediği ilk buluşmamız.",
+                image: "/images/ilk-randevu.jpg"
+            },
+            {
+                name: "Unutulmaz Tatilimiz 🌊",
+                coords: [36.8848, 30.7050], // Örn: Antalya
+                date: "10 Ağustos 2024",
+                description: "Birlikte izlediğimiz en güzel gün batımıydı.",
+                image: "/images/tatil.jpg"
+            }
+        ];
+
+        // Konumları Haritaya Pin Olarak Ekle
+        specialPlaces.forEach(function(place) {
+            var popupContent = `
+                <div class="custom-popup">
+                    <img src="${place.image}" class="popup-img" onerror="this.style.display='none'" />
+                    <h4 style="margin: 5px 0; color: #e63946;">${place.name}</h4>
+                    <small style="color: #666;">📅 ${place.date}</small>
+                    <p style="margin-top: 5px; font-size: 13px;">${place.description}</p>
+                </div>
+            `;
+
+            L.marker(place.coords).addTo(map)
+                .bindPopup(popupContent);
+        });
+    });
+</script>
+
+
+
+
+
     </div>
 
     <div id="cake" class="tab-content">
