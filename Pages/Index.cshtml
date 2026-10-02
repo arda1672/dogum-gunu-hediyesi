@@ -18,6 +18,83 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
     <style>
+
+
+
+
+
+
+
+/* ==========================================
+       1. PASTA BÖLÜMÜ STİLLERİ
+       ========================================== */
+    .cake-section {
+        text-align: center;
+        margin: 30px auto;
+        padding: 25px;
+        background: #fff0f3;
+        border-radius: 20px;
+        max-width: 500px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .cake-container {
+        position: relative;
+        display: inline-block;
+        margin: 15px 0;
+    }
+
+    .cake-emoji {
+        font-size: 80px;
+        display: block;
+    }
+
+    .candle-flame {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .candle-flame.off {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    .btn-blow {
+        background-color: #e63946;
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+        box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+    }
+
+    .btn-blow:hover {
+        background-color: #d62828;
+        transform: scale(1.05);
+    }
+
+    .wish-message {
+        display: none;
+        margin-top: 15px;
+        color: #d62828;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+
+
+
+
+
+
         :root {
             --primary: #ff4d6d;
             --primary-soft: #ffb3c1;
@@ -356,7 +433,31 @@
 
 
 
+<div class="cake-section">
+    <h2>🎂 Bir Dilek Tut ve Mumu Üfle!</h2>
+    <div class="cake-container">
+        <span class="candle-flame" id="flame">🔥</span>
+        <span class="cake-emoji">🎂</span>
+    </div>
+    <br />
+    <button class="btn-blow" onclick="blowCandle()">💨 Mumu Üfle</button>
+    <div class="wish-message" id="wishMessage">
+        ✨ Dileğin kabul olsun sevgilim! İyi ki doğdun! ❤️🎉
+    </div>
+</div>
 
+<script>
+    // 1. PASTA ÜFLEME FONKSİYONU
+    function blowCandle() {
+        var flame = document.getElementById("flame");
+        var wishMessage = document.getElementById("wishMessage");
+        if (flame) {
+            flame.classList.add("off");
+        }
+        if (wishMessage) {
+            wishMessage.style.display = "block";
+        }
+    }
 
 
 
@@ -552,6 +653,8 @@
         cursor: pointer;
     }
 </style>
+
+
 
 <div class="love-map-wrapper">
     <div class="love-map-header">
