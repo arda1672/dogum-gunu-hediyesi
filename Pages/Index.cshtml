@@ -18,83 +18,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
     <style>
-
-
-
-
-
-
-
-/* ==========================================
-       1. PASTA BÖLÜMÜ STİLLERİ
-       ========================================== */
-    .cake-section {
-        text-align: center;
-        margin: 30px auto;
-        padding: 25px;
-        background: #fff0f3;
-        border-radius: 20px;
-        max-width: 500px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    }
-
-    .cake-container {
-        position: relative;
-        display: inline-block;
-        margin: 15px 0;
-    }
-
-    .cake-emoji {
-        font-size: 80px;
-        display: block;
-    }
-
-    .candle-flame {
-        position: absolute;
-        top: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 30px;
-        transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .candle-flame.off {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
-    }
-
-    .btn-blow {
-        background-color: #e63946;
-        color: white;
-        border: none;
-        padding: 12px 28px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
-        box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
-    }
-
-    .btn-blow:hover {
-        background-color: #d62828;
-        transform: scale(1.05);
-    }
-
-    .wish-message {
-        display: none;
-        margin-top: 15px;
-        color: #d62828;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-
-
-
-
-
-
         :root {
             --primary: #ff4d6d;
             --primary-soft: #ffb3c1;
@@ -288,15 +211,29 @@
             color: #333;
             font-size: 1.6rem;
             margin-top: 12px;
+        /* ==========================================
+           PASTA & DİLEK BÖLÜMÜ STİLLERİ
+           ========================================== */
+        .cake-container-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px 20px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            max-width: 580px;
+            margin: 20px auto 30px;
+            position: relative;
         }
 
         .cake-stage {
             position: relative;
-            height: 300px;
+            height: 290px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            margin: 30px 0 40px;
+            margin: 25px 0 35px;
+            user-select: none;
         }
 
         .cake-body {
@@ -304,64 +241,198 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45));
         }
 
         .layer {
-            border-radius: 15px 15px 5px 5px;
-            box-shadow: inset 0 -10px 0 rgba(0,0,0,0.15);
+            position: relative;
+            border-radius: 14px 14px 6px 6px;
+            box-shadow: inset 0 -8px 0 rgba(0,0,0,0.2);
         }
 
-        .layer-bottom { width: 250px; height: 80px; background: linear-gradient(180deg, #ff758f, #d63384); }
-        .layer-middle { width: 190px; height: 70px; background: linear-gradient(180deg, #ff8fa3, #ff4d6d); }
-        .layer-top { width: 130px; height: 50px; background: linear-gradient(180deg, #ffb3c1, #ff758f); }
+        /* Katlar üzerindeki krema dalgası */
+        .layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 14px 14px 8px 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .layer-bottom {
+            width: 260px;
+            height: 80px;
+            background: linear-gradient(180deg, #ff758f 0%, #c9184a 100%);
+            border-radius: 12px 12px 18px 18px;
+            z-index: 1;
+        }
+
+        .layer-middle {
+            width: 195px;
+            height: 70px;
+            background: linear-gradient(180deg, #ff8fa3 0%, #ff4d6d 100%);
+            margin-top: -3px;
+            z-index: 2;
+        }
+
+        .layer-top {
+            width: 135px;
+            height: 55px;
+            background: linear-gradient(180deg, #ffb3c1 0%, #ff758f 100%);
+            margin-top: -3px;
+            z-index: 3;
+        }
+
+        .cake-plate {
+            width: 310px;
+            height: 14px;
+            background: linear-gradient(90deg, #e0e0e0, #ffffff 40%, #ffffff 60%, #e0e0e0);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            margin-top: -3px;
+            z-index: 4;
+        }
+
+        .strawberries {
+            position: absolute;
+            top: -14px;
+            display: flex;
+            gap: 16px;
+            font-size: 20px;
+            z-index: 5;
+            pointer-events: none;
+        }
 
         .candle-wrapper {
             position: absolute;
-            top: -55px;
+            top: -65px;
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
+            z-index: 10;
+            transition: transform 0.25s ease;
+        }
+
+        .candle-wrapper:hover {
+            transform: scale(1.12);
         }
 
         .candle-stick {
-            width: 12px;
-            height: 45px;
-            background: repeating-linear-gradient(45deg, #fff, #fff 6px, #ff4d6d 6px, #ff4d6d 12px);
-            border-radius: 3px;
+            width: 14px;
+            height: 48px;
+            background: repeating-linear-gradient(45deg, #ffffff, #ffffff 6px, #ff4d6d 6px, #ff4d6d 12px);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .flame-glow {
-            width: 18px;
-            height: 26px;
-            background: radial-gradient(ellipse at bottom, #ffee55 0%, #ff9800 100%);
-            border-radius: 50% 50% 20% 20%;
-            box-shadow: 0 0 20px #ff9800, 0 0 40px #ff9800;
-            margin-bottom: -5px;
-            animation: flicker 0.2s infinite alternate;
+            width: 22px;
+            height: 32px;
+            background: radial-gradient(ellipse at bottom, #fff9a6 0%, #ff9800 55%, #ff3d00 100%);
+            border-radius: 50% 50% 25% 25%;
+            box-shadow: 0 0 20px #ffb703, 0 0 45px #fb8500, 0 0 70px rgba(255, 183, 3, 0.7);
+            margin-bottom: -4px;
+            animation: flicker 0.2s infinite alternate ease-in-out;
+            transform-origin: center bottom;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        @@keyframes flicker {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1) rotate(2deg); }
+        .flame-glow.off {
+            opacity: 0;
+            transform: scale(0.2) translateY(-20px);
+            pointer-events: none;
+        }
+
+        .smoke-puff {
+            position: absolute;
+            top: -30px;
+            font-size: 28px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1s ease-out;
+            transform: translateY(0) scale(0.8);
+        }
+
+        .smoke-puff.puffing {
+            opacity: 0.85;
+            transform: translateY(-35px) scale(1.4);
+        }
+
+        .wish-message {
+            display: none;
+            margin-top: 25px;
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(255, 117, 143, 0.15));
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 24px 28px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.35);
+            animation: wishPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .wish-message h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.3rem;
+            color: #ffb3c1;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 179, 193, 0.4);
+        }
+
+        .wish-message p {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #ffffff;
+            line-height: 1.4;
+            margin: 6px 0;
+        }
+
+        @@keyframes wishPop {
+            0% { opacity: 0; transform: scale(0.7) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .btn-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .action-btn {
             background: linear-gradient(45deg, var(--primary), var(--accent));
             color: white;
             border: none;
-            padding: 16px 36px;
+            padding: 15px 34px;
             font-size: 1.1rem;
             font-weight: 700;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .action-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.03);
             box-shadow: 0 15px 30px rgba(255, 77, 109, 0.6);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -433,31 +504,10 @@
 
 
 
-<div class="cake-section">
-    <h2>🎂 Bir Dilek Tut ve Mumu Üfle!</h2>
-    <div class="cake-container">
-        <span class="candle-flame" id="flame">🔥</span>
-        <span class="cake-emoji">🎂</span>
-    </div>
-    <br />
-    <button class="btn-blow" onclick="blowCandle()">💨 Mumu Üfle</button>
-    <div class="wish-message" id="wishMessage">
-        ✨ Dileğin kabul olsun sevgilim! İyi ki doğdun! ❤️🎉
-    </div>
-</div>
 
-<script>
-    // 1. PASTA ÜFLEME FONKSİYONU
-    function blowCandle() {
-        var flame = document.getElementById("flame");
-        var wishMessage = document.getElementById("wishMessage");
-        if (flame) {
-            flame.classList.add("off");
-        }
-        if (wishMessage) {
-            wishMessage.style.display = "block";
-        }
-    }
+
+
+
 
 
 
@@ -479,6 +529,11 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
+
+
+
+
 
     .love-map-header {
         text-align: center;
@@ -732,6 +787,7 @@
             zoomControl: true,
             scrollWheelZoom: true
         }).setView([mekanlar[0].enlem, mekanlar[0].boylam], 13);
+        window.loveMap = map;
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -817,76 +873,102 @@
         window.addEventListener("load", initLoveMap);
     }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="cake" class="tab-content">
-        <h1>Bir Dilek Tut ve Mumu Üfle! 🕯️</h1>
-
-        <div class="cake-stage">
-            <div class="cake-body">
-                <div class="candle-wrapper" onclick="blowCandle()">
-                    <div class="flame-glow" id="flame"></div>
-                    <div class="candle-stick"></div>
-                </div>
-                <div class="layer layer-top"></div>
-                <div class="layer layer-middle"></div>
-                <div class="layer layer-bottom"></div>
-            </div>
-        </div>
-
-        <button class="action-btn" onclick="blowCandle()">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Mumu Üfle ✨
-        </button>
-    </div>
+    </div> <!-- Güzel Anılar (#gallery) sekmesinin kapanışı -->
+>
 
     <script>
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+            
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.classList.add('active');
+            }
+            if (btn) {
+                btn.classList.add('active');
+            }
+
+            if (tabId === 'gallery' && window.loveMap) {
+                setTimeout(function() {
+                    window.loveMap.invalidateSize();
+                }, 200);
+            }
         }
 
         let isBlown = false;
         function blowCandle() {
             if (isBlown) return;
             isBlown = true;
-            document.getElementById('flame').style.display = 'none';
 
-            const count = 200;
-            const defaults = { origin: { y: 0.7 } };
+            const flame = document.getElementById('flame');
+            const smoke = document.getElementById('smoke');
+            const wishMessage = document.getElementById('wishMessage');
+            const btnBlow = document.getElementById('btnBlow');
+            const btnRelight = document.getElementById('btnRelight');
 
-            function fire(particleRatio, opts) {
-                confetti(Object.assign({}, defaults, opts, {
-                    particleCount: Math.floor(count * particleRatio)
-                }));
+            if (flame) flame.classList.add('off');
+            if (smoke) {
+                smoke.classList.add('puffing');
+                setTimeout(() => smoke.classList.remove('puffing'), 1500);
             }
 
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+            if (wishMessage) wishMessage.style.display = 'block';
+            if (btnBlow) btnBlow.style.display = 'none';
+            if (btnRelight) btnRelight.style.display = 'inline-flex';
+
+            triggerConfetti();
+        }
+
+        function relightCandle() {
+            isBlown = false;
+            const flame = document.getElementById('flame');
+            const wishMessage = document.getElementById('wishMessage');
+            const btnBlow = document.getElementById('btnBlow');
+            const btnRelight = document.getElementById('btnRelight');
+
+            if (flame) flame.classList.remove('off');
+            if (wishMessage) wishMessage.style.display = 'none';
+            if (btnBlow) btnBlow.style.display = 'inline-flex';
+            if (btnRelight) btnRelight.style.display = 'none';
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                // Merkezden büyük patlama
+                confetti({
+                    particleCount: 160,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd166', '#06d6a0', '#118ab2', '#ffffff']
+                });
+
+                // 3 saniye boyunca iki kenardan devam eden kutlama fışkırması
+                const duration = 3000;
+                const animationEnd = Date.now() + duration;
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+                    const particleCount = 25 * (timeLeft / duration);
+                    confetti({
+                        particleCount,
+                        angle: 60,
+                        spread: 60,
+                        origin: { x: 0, y: 0.7 },
+                        colors: ['#ff4d6d', '#ff8fa3', '#ffd166', '#ffb3c1']
+                    });
+                    confetti({
+                        particleCount,
+                        angle: 120,
+                        spread: 60,
+                        origin: { x: 1, y: 0.7 },
+                        colors: ['#ff4d6d', '#ff8fa3', '#ffd166', '#ffb3c1']
+                    });
+                }, 200);
+            }
         }
 
         const audio = document.getElementById('bgMusic');
