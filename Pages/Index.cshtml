@@ -347,13 +347,6 @@
         </div>
 
 
-<!-- Harita İçin CSS ve JS Kütüphanesi -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-
-
 
 
 
@@ -372,25 +365,93 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-    .love-map-container {
-        max-width: 900px;
+    .love-map-wrapper {
+        max-width: 1000px;
         margin: 40px auto;
-        padding: 20px;
+        padding: 25px;
         background: #ffffff;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    .love-map-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .love-map-header h2 {
+        color: #e63946;
+        margin-bottom: 5px;
+    }
+
+    .love-map-header p {
+        color: #666;
+        margin: 0;
+    }
+
+    /* Sol Kısayollar + Sağ Harita Düzeni */
+    .map-grid-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 20px;
+        align-items: start;
+    }
+
+    @@media (max-width: 768px) {
+        .map-grid-layout {
+            grid-template-columns: 1fr; /* Mobilde üst üste gelsin */
+        }
+    }
+
+    /* Sol Kısayol Butonları/Kartları */
+    .shortcut-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .shortcut-card {
+        padding: 14px 16px;
+        background: #fdfbfb;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .shortcut-card:hover, .shortcut-card.active {
+        border-color: #e63946;
+        background: #fff0f3;
+        transform: translateX(4px);
+    }
+
+    .shortcut-card h4 {
+        margin: 0 0 4px 0;
+        color: #d62828;
+        font-size: 15px;
+    }
+
+    .shortcut-card p {
+        margin: 0;
+        font-size: 12px;
+        color: #666;
+    }
+
+    /* Sağ Harita Kutusu */
     #coordMap {
-        height: 400px;
+        height: 420px;
         width: 100%;
         border-radius: 15px;
-        margin-top: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         z-index: 1;
     }
 
-    /* Pin Üstündeki Başlık Etiketi */
+    /* Pin Etiketi ve Popup Stilleri */
     .map-tooltip {
         background: #ffffff;
         border: 2px solid #e63946;
@@ -398,11 +459,10 @@
         font-weight: bold;
         border-radius: 8px;
         padding: 4px 8px;
-        font-size: 13px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-size: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
-    /* Popup İçerik Tasarımı */
     .popup-box {
         text-align: center;
         padding: 5px;
@@ -418,52 +478,81 @@
     }
 </style>
 
-<div class="love-map-container">
-    <h2 style="color: #e63946;">🗺️ Aşk Haritamız</h2>
-    <p style="color: #666;">Unutulmaz anlarımızın geçtiği özel koordinatlar...</p>
-    
-    <div id="coordMap"></div>
+<div class="love-map-wrapper">
+    <div class="love-map-header">
+        <h2>🗺️ Aşk Haritamız</h2>
+        <p>Sol taraftaki konumlara tıklayarak anılarımıza yolculuk yapabilirsiniz...</p>
+    </div>
+
+    <div class="map-grid-layout">
+        <!-- Sol Taraf: Kısayol Tuşları / Kartları -->
+        <div class="shortcut-list" id="shortcutContainer">
+            <!-- JavaScript burayı otomatik dolduracak -->
+        </div>
+
+        <!-- Sağ Taraf: Harita -->
+        <div id="coordMap"></div>
+    </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. KOORDİNAT LİSTESİ (Buraları istediğin gibi güncelleyebilirsin)
+        // 1. ÖZEL MEKANLAR VE KOORDİNATLAR LISTESI
         var mekanlar = [
             {
+                id: 0,
                 baslik: "İlk Tanıştığımız Yer ❤️",
-                enlem: 40.209546,   // Enlem (Latitude)
-                boylam: 29.018563,  // Boylam (Longitude)
-                tarih: "20 Kasım 2025",
+                enlem: 40.1885,   // Enlem
+                boylam: 29.0610,  // Boylam
+                tarih: "15 Mayıs 2023",
                 not: "Gözlerinin gözlerime ilk değdiği an..."
             },
-
+            {
+                id: 1,
+                baslik: "İlk Randevu & Kahve ☕",
+                enlem: 40.2100,
+                boylam: 28.9800,
+                tarih: "20 Mayıs 2023",
+                not: "Heyecandan ellerimin titrediği ilk buluşmamız."
+            },
+            {
+                id: 2,
+                baslik: "Unutulmaz Tatilimiz 🌊",
+                enlem: 36.8848,
+                boylam: 30.7050,
+                tarih: "10 Ağustos 2024",
+                not: "Birlikte izlediğimiz en güzel gün batımıydı."
+            }
         ];
 
-        // Haritayı İlk Mekanın Koordinatlarına Odakla
-        var map = L.map('coordMap').setView([mekanlar[0].enlem, mekanlar[0].boylam], 11);
+        // 2. HARİTAYI BAŞLAT
+        var map = L.map('coordMap').setView([mekanlar[0].enlem, mekanlar[0].boylam], 12);
 
-        // Harita Görsel Katmanı
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Harita Boyutunu Otomatik Düzelt (Yarım görünmeyi engeller)
+        // Harita kaymasını engellemek için boyutu sabitle
         setTimeout(function () {
             map.invalidateSize();
         }, 300);
 
-        // Mekanları Haritaya Ekle
-        mekanlar.forEach(function (place) {
+        var markersList = [];
+        var shortcutContainer = document.getElementById("shortcutContainer");
+
+        // 3. MEKANLARI VE KISAYOLLARI OLUŞTUR
+        mekanlar.forEach(function (place, index) {
+            // A) Harita Üzerindeki Marker'ı Oluştur
             var marker = L.marker([place.enlem, place.boylam]).addTo(map);
 
-            // Tıklamadan Üstünde Görünecek Yazı (Kalıcı Etiket)
+            // Kalıcı Etiket
             marker.bindTooltip(place.baslik, {
                 permanent: true,
                 direction: 'top',
                 className: 'map-tooltip'
             });
 
-            // Tıklayınca Açılan Detay Penceresi
+            // Tıklama Detay Penceresi
             var detayHtml = `
                 <div class="popup-box">
                     <h4>${place.baslik}</h4>
@@ -472,6 +561,34 @@
                 </div>
             `;
             marker.bindPopup(detayHtml);
+            markersList.push(marker);
+
+            // B) Sol Traftaki Kısayol Kartını Oluştur
+            var card = document.createElement("div");
+            card.className = "shortcut-card" + (index === 0 ? " active" : "");
+            card.innerHTML = `
+                <h4>${place.baslik}</h4>
+                <p><b>📅 ${place.tarih}</b></p>
+            `;
+
+            // Kısayola Tıklanınca Haritada O Noktaya Git!
+            card.onclick = function () {
+                // Aktif kart vurgusunu güncelle
+                document.querySelectorAll('.shortcut-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+
+                // Haritayı yumuşak bir animasyonla o koordinata uçur ve zoom yap
+                map.flyTo([place.enlem, place.boylam], 14, {
+                    duration: 1.5
+                });
+
+                // O noktanın detay popup'ını aç
+                setTimeout(function() {
+                    marker.openPopup();
+                }, 1200);
+            };
+
+            shortcutContainer.appendChild(card);
         });
     });
 </script>
