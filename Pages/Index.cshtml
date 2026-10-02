@@ -367,118 +367,113 @@
 
 
 
+<!-- Leaflet Harita Kütüphanesi -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <style>
-    .love-map-wrapper {
+    .love-map-container {
         max-width: 900px;
         margin: 40px auto;
-        padding: 25px;
+        padding: 20px;
         background: #ffffff;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         text-align: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .love-map-title {
-        color: #e63946;
-        font-size: 28px;
-        margin-bottom: 5px;
-    }
-
-    .love-map-subtitle {
-        color: #666;
-        margin-bottom: 25px;
-    }
-
-    .map-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        text-align: left;
-    }
-
-    @@media (max-width: 768px) {
-        .map-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .places-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .place-card {
-        padding: 15px;
-        border: 2px solid #f0f0f0;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: #fafafa;
-    }
-
-    .place-card:hover, .place-card.active {
-        border-color: #e63946;
-        background: #fff0f3;
-        transform: translateY(-2px);
-    }
-
-    .place-card h4 {
-        margin: 0 0 5px 0;
-        color: #d62828;
-    }
-
-    .place-card p {
-        margin: 0;
-        font-size: 13px;
-        color: #555;
-    }
-
-    .map-iframe-container {
+    #coordMap {
+        height: 400px;
         width: 100%;
-        height: 350px;
         border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-top: 15px;
+        z-index: 1;
     }
 
-    .map-iframe-container iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
+    /* Pin Üstündeki Başlık Etiketi */
+    .map-tooltip {
+        background: #ffffff;
+        border: 2px solid #e63946;
+        color: #d62828;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Popup İçerik Tasarımı */
+    .popup-box {
+        text-align: center;
+        padding: 5px;
+    }
+    .popup-box h4 {
+        margin: 5px 0;
+        color: #e63946;
+    }
+    .popup-box p {
+        margin: 3px 0;
+        font-size: 12px;
+        color: #555;
     }
 </style>
 
-<div class="love-map-wrapper">
-    <h2 class="love-map-title">🗺️ Aşk Haritamız</h2>
-    <p class="love-map-subtitle">Unutulmaz anlarımızın geçtiği özel noktalar...</p>
-
-    <div class="map-grid">
-        <!-- Sol Taraf: Konum Kartları -->
-<div class="place-card active" onclick="changeLocation('https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d333.8042241631889!2d29.01829813245209!3d40.20958562144736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1str!2str!4v1790943504974!5m2!1str!2str"', this)">
-    <h4>📍 İlk Tanıştığımız Yer ❤</h4>
-    <p><b>Tarih:</b> 20 Kasım 2025</p>
-    <p>Gözlerinin gözlerime ilk değdiği o unutulmaz an...</p>
-</div>
-
-        <!-- Sağ Taraf: Canlı Google Harita -->
-        <div class="map-iframe-container">
-            <iframe id="mainMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12192.5!2d29.0610!3d40.1885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDExJzE4LjYiTiAyOcKwMDMnMzkuNiJF!5e0!3m2!1str!2str!4v1" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-    </div>
+<div class="love-map-container">
+    <h2 style="color: #e63946;">🗺️ Aşk Haritamız</h2>
+    <p style="color: #666;">Unutulmaz anlarımızın geçtiği özel koordinatlar...</p>
+    
+    <div id="coordMap"></div>
 </div>
 
 <script>
-    function changeLocation(mapUrl, cardElement) {
-        // Haritayı değiştir
-        document.getElementById('mainMap').src = mapUrl;
-        
-        // Aktif kart stilini değiştir
-        let cards = document.querySelectorAll('.place-card');
-        cards.forEach(card => card.classList.remove('active'));
-        cardElement.classList.add('active');
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. KOORDİNAT LİSTESİ (Buraları istediğin gibi güncelleyebilirsin)
+        var mekanlar = [
+            {
+                baslik: "İlk Tanıştığımız Yer ❤️",
+                enlem: 40.209546,   // Enlem (Latitude)
+                boylam: 29.018563,  // Boylam (Longitude)
+                tarih: "20 Kasım 2025",
+                not: "Gözlerinin gözlerime ilk değdiği an..."
+            },
+
+        ];
+
+        // Haritayı İlk Mekanın Koordinatlarına Odakla
+        var map = L.map('coordMap').setView([mekanlar[0].enlem, mekanlar[0].boylam], 11);
+
+        // Harita Görsel Katmanı
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Harita Boyutunu Otomatik Düzelt (Yarım görünmeyi engeller)
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 300);
+
+        // Mekanları Haritaya Ekle
+        mekanlar.forEach(function (place) {
+            var marker = L.marker([place.enlem, place.boylam]).addTo(map);
+
+            // Tıklamadan Üstünde Görünecek Yazı (Kalıcı Etiket)
+            marker.bindTooltip(place.baslik, {
+                permanent: true,
+                direction: 'top',
+                className: 'map-tooltip'
+            });
+
+            // Tıklayınca Açılan Detay Penceresi
+            var detayHtml = `
+                <div class="popup-box">
+                    <h4>${place.baslik}</h4>
+                    <p><b>📅 ${place.tarih}</b></p>
+                    <p>${place.not}</p>
+                </div>
+            `;
+            marker.bindPopup(detayHtml);
+        });
+    });
 </script>
 
 
