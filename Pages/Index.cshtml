@@ -505,27 +505,26 @@
 
 <script>
     window.addEventListener("load", function () {
-        // Koordinat listeniz (Koordinatları kendi özel noktalarınızla değiştirin)
+        // Mekanlar dizisi - resim ve resimGor linki eklendi!
         var mekanlar = [
             {
-                baslik: "İlk Tanıştığımız Yer ❤️",
-                enlem: 40.209577,
-                boylam: 29.018557,
-                tarih: "20 Kasım 2025",
-                not: "Gözlerinin gözlerime ilk değdiği an..."
-                resim: "/Resimler/ilk-resim.jpeg"
+                baslik: "İlk Resim Çekindiğimiz Yer 📸❤️",
+                enlem: 40.1885,   // Kendi koordinatlarınız
+                boylam: 29.0610,  // Kendi koordinatlarınız
+                tarih: "15 Mayıs 2023",
+                not: "Birlikte ilk karemiz, unutulmaz anımız...",
+                resim: "/images/ilk-resim.jpeg" // Yüklediğiniz resim yolu
             },
             {
-                baslik: "İlk Resim Çekindiğimiz Yer ❤️",
-                enlem: 40.196122,
-                boylam: 29.054939,
-                tarih: "20 Kasım 2025",
-                not: "Gözlerinin gözlerime ilk değdiği an..."
+                baslik: "İlk Randevu & Kahve ☕",
+                enlem: 40.2100,
+                boylam: 28.9800,
+                tarih: "20 Mayıs 2023",
+                not: "Heyecandan ellerimin titrediği ilk buluşmamız.",
+                resim: "/images/ilk-randevu.jpeg" // Resim yoksa boş kalabilir veya ekleyebilirsiniz
             }
-
         ];
 
-        // 1. Haritayı Oluştur
         var map = L.map('coordMap', {
             zoomControl: true,
             scrollWheelZoom: true
@@ -536,7 +535,6 @@
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Haritanın bozulmasını engelleyen kesin boyut güncellemesi
         setTimeout(function () {
             map.invalidateSize();
         }, 200);
@@ -544,26 +542,32 @@
         var markers = [];
         var shortcutContainer = document.getElementById("shortcutContainer");
 
-        // 2. Mekanları Haritaya ve Sol Menüye Ekle
         mekanlar.forEach(function (place, index) {
-            // Marker Oluştur
             var marker = L.marker([place.enlem, place.boylam]).addTo(map);
 
-            // Üstündeki kalıcı etiket
             marker.bindTooltip(place.baslik, {
                 permanent: true,
                 direction: 'top',
                 className: 'map-tooltip'
             });
 
-            // Tıklayınca açılacak popup
+            // Resim ve "Resmi Gör / Büyüt" Butonlu Popup İçeriği
+            var resimHtml = place.resim ? `
+                <div style="margin-top: 8px;">
+                    <img src="${place.resim}" style="width: 100%; max-height: 140px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);" alt="${place.baslik}" onerror="this.style.display='none'" />
+                    <a href="${place.resim}" target="_blank" style="display: inline-block; margin-top: 6px; padding: 4px 10px; background: #e63946; color: white; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold;">🔍 Resmi Gör / Büyüt</a>
+                </div>
+            ` : '';
+
             var popupContent = `
-                <div class="popup-box">
-                    <h4>${place.baslik}</h4>
-                    <p><b>📅 ${place.tarih}</b></p>
-                    <p>${place.not}</p>
+                <div class="popup-box" style="max-width: 200px; text-align: center;">
+                    <h4 style="margin: 4px 0; color: #e63946;">${place.baslik}</h4>
+                    <p style="margin: 2px 0; font-size: 11px; color: #777;"><b>📅 ${place.tarih}</b></p>
+                    <p style="margin: 4px 0; font-size: 12px; color: #444;">${place.not}</p>
+                    ${resimHtml}
                 </div>
             `;
+            
             marker.bindPopup(popupContent);
             markers.push(marker);
 
@@ -575,22 +579,18 @@
                 <p><b>📅 ${place.tarih}</b></p>
             `;
 
-            // KISAYOLA TIKLAMA HAREKETİ
             card.addEventListener("click", function () {
-                // Aktif kart rengini değiştir
                 document.querySelectorAll('.shortcut-card').forEach(function(c) {
                     c.classList.remove('active');
                 });
                 card.classList.add('active');
 
-                // Harita boyutunu garanti et ve konuma git
                 map.invalidateSize();
                 map.setView([place.enlem, place.boylam], 14, {
                     animate: true,
                     pan: { duration: 1 }
                 });
 
-                // Detay kartını aç
                 setTimeout(function() {
                     marker.openPopup();
                 }, 300);
