@@ -351,60 +351,29 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<style>
-    .map-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-    #loveMap {
-        height: 450px;
-        width: 100%;
-        border-radius: 15px;
-        margin-top: 15px;
-    }
-    .custom-popup .leaflet-popup-content-wrapper {
-        border-radius: 12px;
-        padding: 5px;
-        text-align: center;
-    }
-    .popup-img {
-        width: 100%;
-        max-height: 150px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 8px;
-    }
-</style>
-
-<div class="map-container">
-    <h2>🗺️ Aşk Haritamız</h2>
-    <p>Unutulmaz anlarımızın geçtiği özel noktalar...</p>
-    <div id="loveMap"></div>
-</div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Haritayı Başlat (İlk merkeze alınacak enlem, boylam ve zoom seviyesi)
-        var map = L.map('loveMap').setView([40.209583, 29.018574], 10); // Örn: Bursa civarı
+        // Haritayı Oluştur
+        var map = L.map('loveMap').setView([40.1885, 29.0610], 10);
 
         // OpenStreetMap Katmanı
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Özel Anlar / Konumlar Dizisi (Burayı kendi konumlarınla güncelle!)
+        // HARİTANIN YARIM GÖRÜNMESİNİ ENGELLEYEN KISIM (100ms sonra boyutları tekrar hesaplar)
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 100);
+
+        // Özel Anlar Dizisi
         var specialPlaces = [
             {
                 name: "İlk Tanıştığımız Yer ❤️",
-                coords: [40.209583, 29.018574], // Enlem, Boylam
+                coords: [40.1885, 29.0610],
                 date: "15 Mayıs 2023",
                 description: "Gözlerinin gözlerime ilk değdiği o unutulmaz an...",
-                image: "/images/ilk-tanisma.jpg" // wwwroot/images içindeki resim
+                image: "/images/ilk-tanisma.jpg"
             },
             {
                 name: "İlk Randevu & Kahve ☕",
@@ -412,17 +381,10 @@
                 date: "20 Mayıs 2023",
                 description: "Heyecandan ellerimin titrediği ilk buluşmamız.",
                 image: "/images/ilk-randevu.jpg"
-            },
-            {
-                name: "Unutulmaz Tatilimiz 🌊",
-                coords: [36.8848, 30.7050], // Örn: Antalya
-                date: "10 Ağustos 2024",
-                description: "Birlikte izlediğimiz en güzel gün batımıydı.",
-                image: "/images/tatil.jpg"
             }
         ];
 
-        // Konumları Haritaya Pin Olarak Ekle
+        // Pinleri ve Kalıcı İsim Etiketlerini Ekle
         specialPlaces.forEach(function(place) {
             var popupContent = `
                 <div class="custom-popup">
@@ -433,12 +395,34 @@
                 </div>
             `;
 
-            L.marker(place.coords).addTo(map)
-                .bindPopup(popupContent);
+            // Marker oluştur ve direkt üstünde yazması için bindTooltip ekle
+            var marker = L.marker(place.coords).addTo(map);
+
+            // Tıklamadan direkt üstünde görünen başlık etiketi
+            marker.bindTooltip(place.name, {
+                permanent: true,       // Etiket hep açık kalır
+                direction: 'top',      // Pinin üstünde görünür
+                className: 'map-label' // Şık görünüm için
+            });
+
+            // Tıklayınca detaylı kart açılır
+            marker.bindPopup(popupContent);
         });
     });
 </script>
 
+<style>
+    /* Pin üstündeki yazıların şık durması için CSS */
+    .map-label {
+        background-color: #ffffff;
+        border: 1px solid #e63946;
+        color: #d62828;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 3px 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+</style>
 
 
 
